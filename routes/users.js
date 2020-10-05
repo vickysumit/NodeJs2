@@ -6,8 +6,15 @@ var authenticate = require('../authenticate');
 const passport = require('passport');
 /* GET users listing. */
 router.use(bodyParser.json());
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/',authenticate.verifyUser,authenticate.verifyAdmin, function(req, res, next) {
+  //res.send('respond with a resource');
+  User.find({})
+  .then((users) =>{
+    res.statusCode = 200;
+    res.setHeader('Conteny-Type','application/json');
+    res.json(users);
+  },(err) => next(err))
+  .catch((err) =>next(err));
 });
 
 router.post('/signup', (req, res, next) => {
@@ -46,6 +53,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.json({success: true,token: token, status: 'You are successfully logged in!'});
 });
+
 
 
 module.exports = router;

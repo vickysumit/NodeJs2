@@ -9,7 +9,7 @@ leaderRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors,(req,res,next) =>{
     //res.end('Will send all the leaders to you!')
-    Leaders.find({})
+    Leaders.find(req.query)
      .then((lead) =>{
          res.statusCode = 200;
          res.setHeader('Content-Type','application/json');
